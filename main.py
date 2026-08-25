@@ -56,6 +56,24 @@ def mark_as_completed(trails: list[Trail], index: int) -> None:
     trails[index].if_completed = True
     print("Trail status changed to completed!\n")
 
+def get_valid_input(data_type, minimum=None, maximum=None):
+    while True:
+        try:
+            value = data_type(input())
+
+            if minimum is not None and value < minimum:
+                print("Value is too small. Try again:")
+                continue
+
+            if maximum is not None and value > maximum:
+                print("Value is too large. Try again:")
+                continue
+
+            return value
+
+        except ValueError:
+            print("Invalid input. Try again:")
+
 while True:
     print("\n\n=========================")
     print(" THE TRAIL COMPANION APP")
@@ -67,7 +85,7 @@ while True:
     print("[4] Edit trails")
     print("[5] Exit")
 
-    user_menu_option = int(input())
+    user_menu_option = get_valid_input(int, 1, 5)
 
     match user_menu_option:
         case 1:
@@ -77,26 +95,26 @@ while True:
         case 2:
             print(
                 "\nPlease input the maximum distance in kilometers and I'll print out the appropriate trails for you:")
-            expected_trail_distance = float(input())
+            expected_trail_distance = get_valid_input(float, 0)
             show_trails(filter_trails(trails_list, expected_trail_distance))
             sleep(2)
         case 3:
             show_trails(trails_list)
             print("\nEnter the chosen trail's list number:")
-            chosen_trail_number = int(input())
+            chosen_trail_number = get_valid_input(int, 1, len(trails_list))
             mark_as_completed(trails_list, chosen_trail_number - 1)
             sleep(2)
         case 4:
             print("YOUR TRAILS:")
             show_trails(trails_list)
             print("\nWhich trail do you want to edit?")
-            chosen_trail_number = int(input())
+            chosen_trail_number = get_valid_input(int, 1, len(trails_list))
 
             print("Please insert new data:")
             print("Name:")
             new_name = input()
             print("Distance:")
-            new_distance = float(input())
+            new_distance = get_valid_input(float, 0)
 
             trails_list[chosen_trail_number - 1].update(name = new_name, distance = new_distance)
             sleep(2)
